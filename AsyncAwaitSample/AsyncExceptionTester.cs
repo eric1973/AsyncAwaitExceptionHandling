@@ -96,7 +96,9 @@ namespace AsyncAwaitSample
             }
             finally
             {
-                // Would deadlock in Service, GUI ?
+                // NOTE: Would deadlock in IIS Service, GUI, ASP.NET if awaited task is not
+                // configured as await Task.Delay(2000)/*.ConfigureAwait(false)
+                // in method ActionFinallyTask.
                 this.ActionFinallyTask(taskId, 3).Wait();
             }
 
@@ -119,6 +121,7 @@ namespace AsyncAwaitSample
         {
             try
             {
+                // NOTE: ConfigureAwait can be ommited ONLY in Console Applications.
                 await Task.Delay(2000).ConfigureAwait(false);
 
                 if (taskId % 2 == 0)

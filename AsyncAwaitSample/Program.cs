@@ -8,6 +8,17 @@ using System.Threading.Tasks;
 
 namespace AsyncAwaitSample
 {
+
+    /*
+     * Related documents: 
+     * 
+     * Best Practices in Asynchronous Programming
+     * https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
+     * 
+     * Await, SynchronizationContext, and Console Apps
+     * http://blogs.msdn.com/b/pfxteam/archive/2012/01/20/10259049.aspx
+     * 
+     * */
     class Program
     {
         static void Main(string[] args)
@@ -82,7 +93,8 @@ namespace AsyncAwaitSample
                 Thread.Sleep(1000);
                 Console.WriteLine("Main Thread doing other work ...");
             }
-            
+
+            Console.WriteLine("Main Thread other work finished.");
             Console.ReadLine();
         }
 
