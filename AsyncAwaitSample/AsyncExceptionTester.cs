@@ -111,10 +111,8 @@ namespace AsyncAwaitSample
             if (part == 2)
             {
                 throw new InvalidOperationException(
-                    string.Format("Task '{0}' part '{1}' throw an exception in try-block.", taskId, part));
+                    string.Format("Task '{0}' part '{1}' throw an exception.", taskId, part));
             }
-            
-            Console.WriteLine("Task '{0}' part '{1}' completed...", taskId, part);
         }
 
         internal async Task ActionFinallyTask(int taskId, int part)
@@ -122,14 +120,19 @@ namespace AsyncAwaitSample
             try
             {
                 await Task.Delay(2000).ConfigureAwait(false);
-                // simulate an exception state within that async method in its finally block.
-                throw new InvalidOperationException(
-                    string.Format("Task '{0}' part '{1}' throw an exception in finally-block.", taskId, part));
 
+                if (taskId % 2 == 0)
+                {
+                    // simulate an exception state within that async method in callers finally block.
+                    throw new InvalidOperationException(
+                        string.Format("Task '{0}' part '{1}' throw an exception.", taskId, part));
+                }
+
+                Console.WriteLine("Task '{0}' part '{1}' completed...", taskId, part);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Finally BLOCK: " + e.Message);
+                Console.WriteLine("FINALLY BLOCK: " + e.Message);
             }
         }
 

@@ -92,7 +92,7 @@ namespace AsyncAwaitSample
         internal static void SomeAsyncAction(Action<int> action)
         {
             // invoke a few times async method
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 10; i++)
             {
                 action(i);
             }
