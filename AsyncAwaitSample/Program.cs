@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Threading;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -95,6 +96,12 @@ namespace AsyncAwaitSample
             }
 
             Console.WriteLine("Main Thread other work finished.");
+
+            AsyncPump.Run(async () =>
+            {
+                await DemoAsync();
+            });
+
             Console.ReadLine();
         }
 
@@ -108,6 +115,20 @@ namespace AsyncAwaitSample
             {
                 action(i);
             }
+        }
+
+        static async Task DemoAsync()
+        {
+            var d = new Dictionary<int, int>();
+            for (int i = 0; i < 10000; i++)
+            {
+                int id = Thread.CurrentThread.ManagedThreadId;
+                int count;
+                d[id] = d.TryGetValue(id, out count) ? count + 1 : 1;
+
+                await Task.Yield();
+            }
+            foreach (var pair in d) Console.WriteLine(pair);
         }
     }
 }
