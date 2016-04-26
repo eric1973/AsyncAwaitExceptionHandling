@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AsyncAwaitSample
 {
     internal class AsyncExceptionTester
     {
-        internal async void ThrowExceptionAsyncVoid()
+        internal async void ThrowExceptionAsync()
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Exception thrown in 'async' method that returns 'void'");
         }
 
         internal void AsyncVoidExceptionsCannotBeCaught()
         {
             try
             {
-                this.ThrowExceptionAsyncVoid();
+                this.ThrowExceptionAsync();
             }
             catch (Exception e)
             {
@@ -58,7 +59,7 @@ namespace AsyncAwaitSample
         /// <summary>
         /// Does some asynchronous task on console main. Task.Wait() is
         /// only allowed on Console Applications because Console Main can't
-        /// be 'async' and a Console Application has a threadpool SynchronizationContext.
+        /// be 'async' and a Console Application uses threadpool threads and has no SynchronizationContext.
         /// Continuation of awaited Task continues on another thread of the threadpool
         /// and not the one with is blocked through task.Wait().
         /// 
@@ -97,7 +98,7 @@ namespace AsyncAwaitSample
             finally
             {
                 // NOTE: Would deadlock in IIS Service, GUI, ASP.NET if awaited task is not
-                // configured as await Task.Delay(2000)/*.ConfigureAwait(false)
+                // configured as await Task.Delay(2000).ConfigureAwait(false)
                 // in method ActionFinallyTask.
                 this.ActionFinallyTask(taskId, 3).Wait();
             }
